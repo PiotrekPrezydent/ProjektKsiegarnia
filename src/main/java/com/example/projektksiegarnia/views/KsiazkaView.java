@@ -6,7 +6,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="ksiazki")
@@ -113,6 +115,26 @@ public class KsiazkaView {
         t.commit();
         s.close();
     }
+    public void UpdateThis(List<String> newValues){
+        Session s = DataBaseManager.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        KsiazkaView g = s.get(KsiazkaView.class,getId());
+        g.setId(Integer.parseInt(newValues.get(0)));
+        g.setTytul(s.get(TytulView.class,Long.parseLong(newValues.get(1))));
+        g.setGatunek(s.get(GatunekView.class,Long.parseLong(newValues.get(2))));
+        g.setWydawnictwo(s.get(WydawnictwoView.class,Long.parseLong(newValues.get(3))));
+        g.setRokWydania(LocalDate.parse(newValues.get(4)));
+        g.setJezyk(s.get(JezykView.class,Long.parseLong(newValues.get(5))));
+        if(newValues.get(6) == null || newValues.get(6).equals(""))
+            g.setUzytkownik(null);
+        else
+            g.setUzytkownik(s.get(UzytkownikView.class,Long.parseLong(newValues.get(6))));
+
+        s.merge(g);
+        t.commit();
+        s.close();
+    }
 
     public UzytkownikView getUzytkownik() {
         if(uzytkownik == null)
@@ -126,6 +148,12 @@ public class KsiazkaView {
 
     public String GetNormalizedInfo(){
         return getTytul().getNazwa() + "\t\t\t" + getGatunek().getNazwa() + "\t\t\t" + getJezyk().getNazwa() + "\t\t\t" + getRokWydania().toString() + "\t\t\t" + getWydawnictwo().getNazwa();
+    }
+    public String GetFullInfo(){
+        return getId() + "\n\t\t\t" + getTytul().GetFullInfo() + "\n\t\t\t" + getGatunek().GetFullInfo()  + "\n\t\t\t" + getWydawnictwo().GetFullInfo()  + "\n\t\t\t" + getRokWydania().toString() + "\n\t\t\t" + getJezyk().GetFullInfo()  + "\n\t\t\t" + getUzytkownik().GetFullInfo();
+    }
+    public List<String> CurrentValuesAsString() {
+        return Arrays.asList(String.valueOf(getId()),getTytul().getId().toString(),getGatunek().getId().toString(),getWydawnictwo().getId().toString(),getRokWydania().toString(),getJezyk().getId().toString(),getUzytkownik().getId().toString());
     }
 
 }

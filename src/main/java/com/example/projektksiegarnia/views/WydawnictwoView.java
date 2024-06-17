@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Entity
 @Table(name="wydawnictwa")
 public class WydawnictwoView {
@@ -34,6 +37,19 @@ public class WydawnictwoView {
         t.commit();
         s.close();
     }
+    public void UpdateThis(List<String> newValues){
+        Session s = DataBaseManager.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        WydawnictwoView g = s.get(WydawnictwoView.class,getId());
+        g.setId(Long.parseLong(newValues.get(0)));
+        g.setNazwa(newValues.get(1));
+
+        s.merge(g);
+        t.commit();
+        s.close();
+    }
+
     public String GetNormalizedInfo(){
         return getId() + "\t\t\t" + getNazwa();
     }
@@ -53,5 +69,12 @@ public class WydawnictwoView {
 
     public String getNazwa() {
         return nazwa;
+    }
+
+    public String GetFullInfo(){
+        return getId() + "\t\t\t" + getNazwa();
+    }
+    public List<String> CurrentValuesAsString() {
+        return Arrays.asList(getId().toString(),getNazwa());
     }
 }

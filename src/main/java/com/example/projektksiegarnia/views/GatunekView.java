@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Entity
 @Table(name="gatunki")
 public class GatunekView {
@@ -35,6 +38,19 @@ public class GatunekView {
         s.close();
     }
 
+    public void UpdateThis(List<String> newValues){
+        Session s = DataBaseManager.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        GatunekView g = s.get(GatunekView.class,getId());
+        g.setId(Long.parseLong(newValues.get(0)));
+        g.setNazwa(newValues.get(1));
+
+        s.merge(g);
+        t.commit();
+        s.close();
+    }
+
     // Getters and setters
     public Long getId() {
         return id;
@@ -55,4 +71,14 @@ public class GatunekView {
     public String GetNormalizedInfo(){
         return getId() + "\t\t\t" + getNazwa();
     }
+
+    public String GetFullInfo(){
+        return getId() + "\t\t\t" + getNazwa();
+    }
+
+    public List<String> CurrentValuesAsString() {
+        return Arrays.asList(getId().toString(),getNazwa());
+    }
+
+
 }

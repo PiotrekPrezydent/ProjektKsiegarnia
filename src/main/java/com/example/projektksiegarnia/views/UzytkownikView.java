@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Entity
 @Table(name="uzytkownicy")
 public class UzytkownikView {
@@ -38,6 +41,20 @@ public class UzytkownikView {
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
         s.remove(this);
+        t.commit();
+        s.close();
+    }
+    public void UpdateThis(List<String> newValues){
+        Session s = DataBaseManager.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        UzytkownikView g = s.get(UzytkownikView.class,getId());
+        g.setId(Long.parseLong(newValues.get(0)));
+        g.setImie(newValues.get(1));
+        g.setNazwisko(newValues.get(2));
+        g.setEmail(newValues.get(3));
+
+        s.merge(g);
         t.commit();
         s.close();
     }
@@ -82,5 +99,12 @@ public class UzytkownikView {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    public String GetFullInfo(){
+        String id = getId() == Long.MIN_VALUE ? "null" : getId().toString();
+        return id + "\t\t\t" + getImie() + "\t\t\t" + getNazwisko() + "\t\t\t" + getEmail() ;
+    }
+    public List<String> CurrentValuesAsString() {
+        return Arrays.asList(getId().toString(),getImie(),getNazwisko(),getEmail());
     }
 }
