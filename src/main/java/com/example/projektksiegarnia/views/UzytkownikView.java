@@ -4,7 +4,10 @@ import com.example.projektksiegarnia.DataBaseManager;
 import jakarta.persistence.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
+/**
+ * Klasa reprezentująca widok encji Uzytkownik.
+ * Reprezentuje tabelę uzytkownik w bazie danych.
+ */
 @Entity
 @Table(name="uzytkownicy")
 public class UzytkownikView {
@@ -21,6 +24,13 @@ public class UzytkownikView {
     @Column(nullable = false)
     private String email;
 
+    /**
+     *  metoda ta dodaje nowego uzytkownika do bazy
+     *       @param imie imię użytkownika
+     *       @param nazwisko nazwisko użytkownika
+     *       @param email email użytkownika
+     *
+     */
     public static void AddNew(String imie, String nazwisko, String email){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -34,6 +44,9 @@ public class UzytkownikView {
         t.commit();
         s.close();
     }
+    /**
+     * Usuwa bieżącego użytkownika z bazy danych.
+     */
     public void RemoveThis(){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -41,10 +54,19 @@ public class UzytkownikView {
         t.commit();
         s.close();
     }
+    /**
+     *  metoda ta zwraca znormalizowane informacje na temat Uzytkownika
+     *  @return String zawierajacy informacje o uzytkowniku (id,imie,nazwisko,email)
+     */
     public String GetNormalizedInfo(){
         return getId() + "\t\t\t" + getImie() + "\t\t\t" + getNazwisko() + "\t\t\t" + getEmail();
     }
-
+    /**
+     * Konstruktor domyślny ustawiający wartości domyślne dla pol
+     * id (minimalna wartosc long)
+     * imie,nazwisko,emial = null
+     *
+     */
     public UzytkownikView(){
         this.id = Long.MIN_VALUE;
         this.imie = "null";

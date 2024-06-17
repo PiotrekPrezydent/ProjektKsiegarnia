@@ -4,7 +4,10 @@ import com.example.projektksiegarnia.DataBaseManager;
 import jakarta.persistence.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
+/**
+ * Klasa reprezentująca widok encji Tytul.
+ * Reprezentuje tabelę tytuly w bazie danych.
+ */
 @Entity
 @Table(name = "tytuly")
 public class TytulView {
@@ -15,6 +18,11 @@ public class TytulView {
     @Column(nullable = false)
     private String nazwa;
 
+    /**
+     *  metoda ta dodaje nowy tutul do bazy
+     *       @param nazwa tytul dodawanej ksiazki
+     *
+     */
     public static void AddNew(String nazwa){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -26,6 +34,9 @@ public class TytulView {
         t.commit();
         s.close();
     }
+    /**
+     *  metoda ta usuwa bierzacy tytul z bazy
+     */
     public void RemoveThis(){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -33,6 +44,10 @@ public class TytulView {
         t.commit();
         s.close();
     }
+    /**
+     *  metoda ta zwraca znormalizowane informacje na temat tutulu
+     *  @return String zawierajacy informacje o tytule (id,nazwe)
+     */
     public String GetNormalizedInfo(){
         return getId() + "\t\t\t" + getNazwa();
     }

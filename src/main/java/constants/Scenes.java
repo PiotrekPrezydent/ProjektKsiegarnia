@@ -7,3 +7,6 @@ public enum Scenes {
     Moderator,
     Admin,
 }
+/**
+ * Jest to ENUMERATOR Posiadajacy wszystkie sceny aplikacji
+ */

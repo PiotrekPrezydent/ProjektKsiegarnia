@@ -16,7 +16,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.List;
-
+/**
+ * klasa LoginViewModel odpowiada za logikę interfejsu klienta
+ */
 public class ClientViewModel {
     @FXML
     Label MainText;

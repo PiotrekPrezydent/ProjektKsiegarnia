@@ -4,7 +4,10 @@ import com.example.projektksiegarnia.DataBaseManager;
 import jakarta.persistence.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
+/**
+ * Klasa reprezentująca widok encji Jezyk.
+ * Reprezentuje tabelę jezyki w bazie danych.
+ */
 @Entity
 @Table(name="jezyki")
 public class JezykView {
@@ -14,7 +17,11 @@ public class JezykView {
 
     @Column(nullable = false)
     private String nazwa;
-
+    /**
+     *  metoda ta dodaje nowy jezyk do bazy
+     *       @param nazwa jezyk dodawanej ksiazki
+     *
+     */
     public static void AddNew(String nazwa){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -26,6 +33,9 @@ public class JezykView {
         t.commit();
         s.close();
     }
+    /**
+     *  metoda ta usuwa bierzacy jezyk z bazy
+     */
     public void RemoveThis(){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -33,6 +43,10 @@ public class JezykView {
         t.commit();
         s.close();
     }
+    /**
+     * Metoda ta zwraca znormalizowane informacje na temat jezyka
+     * @return String zawierajacy informacje o jezyku (id,nazwa)
+     */
     public String GetNormalizedInfo(){
         return getId() + "\t\t\t" + getNazwa();
     }

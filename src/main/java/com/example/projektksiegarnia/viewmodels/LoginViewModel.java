@@ -6,7 +6,9 @@ import constants.Scenes;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-
+/**
+ * klasa LoginViewModel odpowiada za logikę interfejsu logowania
+ */
 public class LoginViewModel {
     @FXML
     TextField login;
@@ -18,13 +20,18 @@ public class LoginViewModel {
     void initialize(){
     }
 
-
+    /**
+     * metoda ta sprawdza wprowadzone dane logowania
+     * przelacza na odpowiednią scenę lub wyswietla alert w przypadku blednych danych
+     * jest wywolywana po kliknięciu przycisku logowania
+     *
+     */
     @FXML
     void OnLoginClicked(){
         String l = login.getText();
         String p = password.getText();
 
-        //i fucking hate java .equals my balls
+        //i love  java .equals not working as always
         if(l.equals(Constants.ClientLogin) && p.equals(Constants.ClientPassword))
             SceneManager.LoadScene(Scenes.Client);
         else if (l.equals(Constants.ModLogin) && p.equals(Constants.ModPassword))

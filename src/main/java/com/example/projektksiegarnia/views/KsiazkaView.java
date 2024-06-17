@@ -7,10 +7,16 @@ import org.hibernate.Transaction;
 
 import java.time.LocalDate;
 import java.util.Date;
-
+/**
+ * Klasa reprezentująca widok encji Ksiazki.
+ * Reprezentuje tabelę ksiazki w bazie danych.
+ */
 @Entity
 @Table(name="ksiazki")
 public class KsiazkaView {
+    /**
+     * id encji (generowany automatycznie)
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -87,6 +93,15 @@ public class KsiazkaView {
         this.jezyk = jezyk;
     }
 
+    /**
+     * Metoda ta dodaje nową książkę do bazy danych.
+     * @param TytulID id tytulu książki
+     * @param GatunekID id gatunku książki
+     * @param WydawnictwoID id wydawnictwa książki
+     * @param DataWydania data wydania książki
+     * @param JezykID id jezyka książki
+     * @param UserID id użytkownika przypisanego do książki
+     */
     public static void AddNew(Long TytulID, Long GatunekID, Long WydawnictwoID, LocalDate DataWydania, Long JezykID, Long UserID){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -106,6 +121,9 @@ public class KsiazkaView {
         t.commit();
         s.close();
     }
+    /**
+     *  metoda ta usuwa bierzaca ksiazke z bazy
+     */
     public void RemoveThis(){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -113,17 +131,26 @@ public class KsiazkaView {
         t.commit();
         s.close();
     }
-
+    /**
+     * Metoda ta zwraca uzytkownika przypisanego do ksiazki
+     * jesli zaden nie jest przypisany zwraca nowego uzytkownika {@link UzytkownikView} z parametrami bazowymi
+     */
     public UzytkownikView getUzytkownik() {
         if(uzytkownik == null)
             return new UzytkownikView();
         return uzytkownik;
     }
-
+    /**
+     * Metoda ta ustawia uzytkownika przypisanego do ksiazki
+     * @param uzytkownik nowy uzytkownik przypisany do ksiazki
+     */
     public void setUzytkownik(UzytkownikView uzytkownik) {
         this.uzytkownik = uzytkownik;
     }
-
+    /**
+     *  metoda ta zwraca znormalizowane informacje na temat tutulu
+     *  @return String zawierajacy informacje o ksiazce (tutu,gatunek,jezyk,rokwydania,wydawnictwo)
+     */
     public String GetNormalizedInfo(){
         return getTytul().getNazwa() + "\t\t\t" + getGatunek().getNazwa() + "\t\t\t" + getJezyk().getNazwa() + "\t\t\t" + getRokWydania().toString() + "\t\t\t" + getWydawnictwo().getNazwa();
     }
