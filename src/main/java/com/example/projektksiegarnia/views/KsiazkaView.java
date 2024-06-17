@@ -6,17 +6,13 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
-/**
- * Klasa reprezentująca widok encji Ksiazki.
- * Reprezentuje tabelę ksiazki w bazie danych.
- */
+import java.util.List;
+
 @Entity
 @Table(name="ksiazki")
 public class KsiazkaView {
-    /**
-     * id encji (generowany automatycznie)
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -93,15 +89,6 @@ public class KsiazkaView {
         this.jezyk = jezyk;
     }
 
-    /**
-     * Metoda ta dodaje nową książkę do bazy danych.
-     * @param TytulID id tytulu książki
-     * @param GatunekID id gatunku książki
-     * @param WydawnictwoID id wydawnictwa książki
-     * @param DataWydania data wydania książki
-     * @param JezykID id jezyka książki
-     * @param UserID id użytkownika przypisanego do książki
-     */
     public static void AddNew(Long TytulID, Long GatunekID, Long WydawnictwoID, LocalDate DataWydania, Long JezykID, Long UserID){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -121,9 +108,6 @@ public class KsiazkaView {
         t.commit();
         s.close();
     }
-    /**
-     *  metoda ta usuwa bierzaca ksiazke z bazy
-     */
     public void RemoveThis(){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -131,28 +115,45 @@ public class KsiazkaView {
         t.commit();
         s.close();
     }
-    /**
-     * Metoda ta zwraca uzytkownika przypisanego do ksiazki
-     * jesli zaden nie jest przypisany zwraca nowego uzytkownika {@link UzytkownikView} z parametrami bazowymi
-     */
+    public void UpdateThis(List<String> newValues){
+        Session s = DataBaseManager.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        KsiazkaView g = s.get(KsiazkaView.class,getId());
+        g.setId(Integer.parseInt(newValues.get(0)));
+        g.setTytul(s.get(TytulView.class,Long.parseLong(newValues.get(1))));
+        g.setGatunek(s.get(GatunekView.class,Long.parseLong(newValues.get(2))));
+        g.setWydawnictwo(s.get(WydawnictwoView.class,Long.parseLong(newValues.get(3))));
+        g.setRokWydania(LocalDate.parse(newValues.get(4)));
+        g.setJezyk(s.get(JezykView.class,Long.parseLong(newValues.get(5))));
+        if(newValues.get(6) == null || newValues.get(6).equals(""))
+            g.setUzytkownik(null);
+        else
+            g.setUzytkownik(s.get(UzytkownikView.class,Long.parseLong(newValues.get(6))));
+
+        s.merge(g);
+        t.commit();
+        s.close();
+    }
+
     public UzytkownikView getUzytkownik() {
         if(uzytkownik == null)
             return new UzytkownikView();
         return uzytkownik;
     }
-    /**
-     * Metoda ta ustawia uzytkownika przypisanego do ksiazki
-     * @param uzytkownik nowy uzytkownik przypisany do ksiazki
-     */
+
     public void setUzytkownik(UzytkownikView uzytkownik) {
         this.uzytkownik = uzytkownik;
     }
-    /**
-     *  metoda ta zwraca znormalizowane informacje na temat tutulu
-     *  @return String zawierajacy informacje o ksiazce (tutu,gatunek,jezyk,rokwydania,wydawnictwo)
-     */
+
     public String GetNormalizedInfo(){
         return getTytul().getNazwa() + "\t\t\t" + getGatunek().getNazwa() + "\t\t\t" + getJezyk().getNazwa() + "\t\t\t" + getRokWydania().toString() + "\t\t\t" + getWydawnictwo().getNazwa();
+    }
+    public String GetFullInfo(){
+        return getId() + "\n\t\t\t" + getTytul().GetFullInfo() + "\n\t\t\t" + getGatunek().GetFullInfo()  + "\n\t\t\t" + getWydawnictwo().GetFullInfo()  + "\n\t\t\t" + getRokWydania().toString() + "\n\t\t\t" + getJezyk().GetFullInfo()  + "\n\t\t\t" + getUzytkownik().GetFullInfo();
+    }
+    public List<String> CurrentValuesAsString() {
+        return Arrays.asList(String.valueOf(getId()),getTytul().getId().toString(),getGatunek().getId().toString(),getWydawnictwo().getId().toString(),getRokWydania().toString(),getJezyk().getId().toString(),getUzytkownik().getId().toString());
     }
 
 }
