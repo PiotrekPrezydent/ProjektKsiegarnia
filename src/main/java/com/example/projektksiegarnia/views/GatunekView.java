@@ -7,7 +7,10 @@ import org.hibernate.Transaction;
 
 import java.util.Arrays;
 import java.util.List;
-
+/**
+ * Klasa reprezentująca widok encji Gatunek.
+ * Reprezentuje tabelę gatunki w bazie danych.
+ */
 @Entity
 @Table(name="gatunki")
 public class GatunekView {
@@ -17,7 +20,10 @@ public class GatunekView {
 
     @Column(nullable = false)
     private String nazwa;
-
+    /**
+     *  metoda ta dodaje nowy gatunek do bazy
+     *       @param nazwa gatunek dodawanej ksiazki
+     */
     public static void AddNew(String nazwa){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -29,7 +35,9 @@ public class GatunekView {
         t.commit();
         s.close();
     }
-
+    /**
+     *  metoda ta usuwa bierzacy gatunek z bazy
+     */
     public void RemoveThis(){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -37,7 +45,11 @@ public class GatunekView {
         t.commit();
         s.close();
     }
-
+    /**
+     *  metoda ta aktualziuje bierzacy gatunek w bazie
+     *      @param newValues nowe wartosci w tablicy (id,nazwa)
+     *
+     */
     public void UpdateThis(List<String> newValues){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();

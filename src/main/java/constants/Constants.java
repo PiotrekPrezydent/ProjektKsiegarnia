@@ -1,5 +1,9 @@
 package constants;
-
+/**
+ * klasa ta odpowiada za przechowywanie zmiennych typu const
+ * takich jak pliki .fxml
+ * oraz zmiennych tymczasowych
+ */
 public class Constants {
     public static final String BootFXML = "BootScene.fxml";
     public static final String LoginFXML = "LoginScene.fxml";
@@ -17,3 +21,4 @@ public class Constants {
     public static final String AdminLogin = "admin";
     public static final String AdminPassword = "admin";
 }
+

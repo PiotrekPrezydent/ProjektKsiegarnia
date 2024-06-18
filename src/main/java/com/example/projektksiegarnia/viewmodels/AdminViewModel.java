@@ -15,35 +15,50 @@ import org.hibernate.Transaction;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.*;
-
+/**
+ * klasa AdminViewModel odpowiada za logikę interfejsu Administatora
+ */
 public class AdminViewModel {
     @FXML
     VBox MainContainer;
 
     @FXML
     Button FooterButton;
-
+    /**
+     * metoda ta odpowiada za inicjalizuje AdminViewModel.
+     */
     @FXML
     void initialize(){
         FooterButton.setOnAction(_->Logout());
         FooterButton.setText("Wyloguj");
     }
-
+    /**
+     * metoda ta obsługuje zdarzenie kliknięcia przycisku "Dodaj".
+     */
     @FXML
     void OnAddClicked(){
         ShowOptions(AdminOptions.Add);
     }
+    /**
+     * metoda ta obsługuje zdarzenie kliknięcia przycisku "Edytuj".
+     */
     @FXML
     void OnEditClicked(){
         ShowOptions(AdminOptions.Edit);
     }
+    /**
+     * metoda ta obsługuje zdarzenie kliknięcia przycisku "Usun".
+     */
     @FXML
     void OnRemoveClicked(){
         ShowOptions(AdminOptions.Remove);
     }
 
 
-
+    /**
+     * Metoda ta wyświetla opcje w zależności od wybranej opcji AdminOptions.
+     * @param options wybrana opcja AdminOptions (dodaj,edytuj,usun).
+     */
     void ShowOptions(AdminOptions options){
         MainContainer.getChildren().clear();
         FooterButton.setText("Powrót");
@@ -92,12 +107,18 @@ public class AdminViewModel {
         MainContainer.getChildren().add(box);
 
     }
-
+    /**
+     * metoda ta przygotowuje pola do dodania nowych danych okreslonego typu
+     * @param type typ danych do dodania
+     */
     void AddData(Class type){
         GenerateTextFieldsForNewData(type);
     }
 
-
+    /**
+     * metoda ta przygotowuje pola do edytowania nowych danych okreslonego typu
+     * @param type typ danych do edytowania
+     */
     void EditData(Class type){
         MainContainer.getChildren().clear();
         Session s = DataBaseManager.getSessionFactory().openSession();
@@ -147,7 +168,10 @@ public class AdminViewModel {
             MainContainer.getChildren().add(tt);
         }
     }
-
+    /**
+     * metoda ta usuwa dane określonego typu.
+     * @param type typ danych do usunięcia
+     */
     void RemoveData(Class type){
         MainContainer.getChildren().clear();
         Session s = DataBaseManager.getSessionFactory().openSession();
@@ -212,7 +236,13 @@ public class AdminViewModel {
             MainContainer.getChildren().add(box);
         }
     }
-
+    /**
+     * metoda ta generuje pola tekstowe do aktualizacji
+     * @param o obiekt reprezentujący dane do aktualizacji
+     * @param fields pola obiektu do aktualizacji
+     * @param currentData bieżące wartości danych
+     * @param type typ danych do aktualizacji
+     */
     void GenerateTextFieldsForUpdate(Object o,Field[] fields, List<String> currentData, Class type){
         MainContainer.getChildren().clear();
         VBox box = new VBox();
@@ -222,8 +252,10 @@ public class AdminViewModel {
         //td usunac view z konca
         text.setText("Edytowanie wybranego : " + type.getSimpleName());
         box.getChildren().add(text);
+        //lista danych wprowadzonych w polach tekstowych
         ArrayList<TextField> newData = new ArrayList<>();
-
+        // sprawdź typ obiektu i generuj odpowiednie pola
+        // utworz 7 box do organizacji pól
         if(type.equals(KsiazkaView.class)){
             HBox[] hboxs = new HBox[7];
             for (int i=0;i<hboxs.length;i++){
@@ -256,13 +288,13 @@ public class AdminViewModel {
             ComboBox<String> uids = new ComboBox<String>();
             uids.getItems().clear();
             uids.setValue(currentData.get(6));
-
+            // wszystkie dostępne ID dla rozwijanych list
             tids.getItems().addAll(GetAllIds(TytulView.class.getSimpleName()));
             gids.getItems().addAll(GetAllIds(GatunekView.class.getSimpleName()));
             wids.getItems().addAll(GetAllIds(WydawnictwoView.class.getSimpleName()));
             jids.getItems().addAll(GetAllIds(JezykView.class.getSimpleName()));
             uids.getItems().addAll(GetAllIds(UzytkownikView.class.getSimpleName()));
-
+            //etukiety
             Label idtl = new Label("ID Ksiazki");
             Label tl = new Label("ID Tytulu");
             Label gl = new Label("ID Gatunku");
@@ -270,7 +302,7 @@ public class AdminViewModel {
             Label dl = new Label("Data Wydania");
             Label jl = new Label("ID Jezyka");
             Label ul = new Label("ID Uzytkownika");
-
+            // elementy do hboxow
             hboxs[0].getChildren().add(idtl);
             hboxs[0].getChildren().add(idt);
             hboxs[1].getChildren().add(tl);
@@ -289,7 +321,7 @@ public class AdminViewModel {
             for (int i=0;i<hboxs.length;i++){
                 box.getChildren().add(hboxs[i]);
             }
-
+            //przycisk do aktualizacji
             Button b = new Button();
             b.setText("Wykonaj");
             b.setOnAction(_->{
@@ -298,6 +330,7 @@ public class AdminViewModel {
             });
             box.getChildren().add(b);
         }else{
+            //literacja przez wszystkie pola i generowanie pol tekstowych
             for (int i=0;i<fields.length;i++){
                 HBox boxh = new HBox();
                 boxh.setSpacing(20d);
@@ -316,6 +349,7 @@ public class AdminViewModel {
 
                 box.getChildren().add(boxh);
             }
+            //dodawanie przycisku dodaj do boxa
             Button b = new Button();
             b.setText("Wykonaj");
             b.setOnAction(_->{
@@ -324,10 +358,15 @@ public class AdminViewModel {
             });
             box.getChildren().add(b);
         }
-
+        //aktualizowanie glownego kontenera
         MainContainer.getChildren().add(box);
     }
-
+    /**
+     * metoda ta wykonuje operację aktualizacji dla okreslonego typu danych
+     * @param o Obiekt reprezentujący dane do aktualizacji
+     * @param type Typ danych do aktualizacji
+     * @param values Nowe wartości dla danych
+     */
     void ExecuteUpdate(Object o,Class type, List<String> values){
         if(type.equals(GatunekView.class)){
             GatunekView g = (GatunekView) o;
@@ -362,7 +401,10 @@ public class AdminViewModel {
 
 
     }
-
+    /**
+     * metoda ta generuje pola tekstowe
+     * @param type typ danych do dodania
+     */
     void GenerateTextFieldsForNewData(Class type){
         MainContainer.getChildren().clear();
         VBox box = new VBox();
@@ -452,7 +494,11 @@ public class AdminViewModel {
 
         MainContainer.getChildren().add(box);
     }
-
+    /**
+     * wykonuje operację dodawania danych.
+     * @param type typ danych do dodania
+     * @param values nowe wartosci danych
+     */
     void ExecuteAddData(Class type, List<String> values){
         if(type.equals(GatunekView.class)){
             GatunekView.AddNew(values.get(1));
@@ -481,7 +527,11 @@ public class AdminViewModel {
             return;
         }
     }
-
+    /**
+     * Pobiera wszystkie id dla danego typu.
+     * @param typename nazwa typu dla ktorego pobierane są id
+     * @return lista id
+     */
     List<String> GetAllIds(String typename){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -491,13 +541,19 @@ public class AdminViewModel {
     void Logout(){
         SceneManager.LoadScene(Scenes.Login);
     }
-
+    /**
+     * metoda ta wraca do poprzedniego interfejsu po edycji
+     */
     void Return(){
         MainContainer.getChildren().clear();
         FooterButton.setOnAction(_->Logout());
         FooterButton.setText("Wyloguj");
     }
-
+    /**
+     * metoda ta pbiera typ danych na podstawie nazwy danych
+     * @param DataName nazwa danych (np. "Gatunki", "Jezyki").
+     * @return typ danych odpowiadający nazwie
+     */
     Class GetDataType(String DataName){
         switch (DataName){
             case "Gatunki" -> {
