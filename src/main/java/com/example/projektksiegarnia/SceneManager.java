@@ -6,9 +6,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import org.hibernate.SessionFactory;
 
 import java.io.IOException;
-
+/**
+ * kalsa ta odpowiada za obsluge scen aplikacji
+ * ładuje odpowiednią scene w zależnosci jaki użytkownik
+ */
 public class SceneManager {
     public static Stage PrimaryStage;
     public static Scene CurrentScene;
@@ -16,7 +20,7 @@ public class SceneManager {
 
     /**
      * metoda ta ładuje odpowiednią scene w zależnosci jaki użytkownik
-     *      * sie zalogował tworzac nowyobiekt FXMLLoader
+     * sie zalogował tworzac nowyobiekt FXMLLoader
      * @param scene metoda przyjmuje parametr Scenes czyli plik fxml
      *              (na poaczatku działania aplikacji scene glowna)
      */
