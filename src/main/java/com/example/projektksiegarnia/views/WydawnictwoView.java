@@ -7,7 +7,10 @@ import org.hibernate.Transaction;
 
 import java.util.Arrays;
 import java.util.List;
-
+/**
+ * Klasa reprezentująca widok encji Wydawnictwo.
+ * Reprezentuje tabelę wydawnictwa w bazie danych.
+ */
 @Entity
 @Table(name="wydawnictwa")
 public class WydawnictwoView {
@@ -19,6 +22,9 @@ public class WydawnictwoView {
     @Column(nullable = false)
     private String nazwa;
 
+    /**
+     * Metoda ta dodaje nowe wydwanictwo do bazy
+     */
     public static void AddNew(String nazwa){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -30,6 +36,10 @@ public class WydawnictwoView {
         t.commit();
         s.close();
     }
+
+    /**
+     * Metoda ta usuwa wydwanictwo z bazy
+     */
     public void RemoveThis(){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -37,6 +47,12 @@ public class WydawnictwoView {
         t.commit();
         s.close();
     }
+    /**
+     *  metoda ta aktualziuje bierzacy wydawnictwo w bazie
+     *      @param newValues nowe wartosci w tablicy (id,nazwa)
+     *
+     */
+
     public void UpdateThis(List<String> newValues){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -49,7 +65,10 @@ public class WydawnictwoView {
         t.commit();
         s.close();
     }
-
+    /**
+     * Metoda ta zwraca znormalizowane informacje na temat wydawnictwa
+     * @return String zawierajacy informacje o wydawnictwie (id,nazwa)
+     */
     public String GetNormalizedInfo(){
         return getId() + "\t\t\t" + getNazwa();
     }

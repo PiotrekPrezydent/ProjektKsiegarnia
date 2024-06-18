@@ -40,6 +40,9 @@ public class ClientViewModel {
 
     ClientOptions SelectedOption;
 
+    /**
+     *  metoda ta odpowiada za inicjalizacje sceny
+     */
 
     @FXML
     void initialize(){
@@ -51,36 +54,62 @@ public class ClientViewModel {
         MainText.setText("Zalogowano jako uzytkownik 1");
     }
 
+    /**
+     * metoda ta odpowida za wyswietlanie wyporzyczonych ksiazek po wcisnieciu przycisku
+     *
+     */
 
     @FXML
     void OnBorrowedClick(){
         SelectedOption = ClientOptions.View;
         SetBooksBasedOnSelectedOptions(TytulName.getText(),GatunkiCB.getValue(),JezykiCB.getValue(),WydawnictwaCB.getValue(),1L,SelectedOption);
     }
+    /**
+     * metoda ta odpowida za wyswietlanie wyporzyczania ksiazek po wcisnieciu przycisku
+     *
+     */
     @FXML
     void OnBorrowClick(){
         SelectedOption = ClientOptions.Borrow;
         SetBooksBasedOnSelectedOptions(TytulName.getText(),GatunkiCB.getValue(),JezykiCB.getValue(),WydawnictwaCB.getValue(),Long.MIN_VALUE,SelectedOption);
     }
-
+    /**
+     * metoda ta odpowida za wyswietlanie zwracania ksiazek po wcisnieciu przycisku
+     *
+     */
     @FXML
     void OnReturnClick(){
         SelectedOption = ClientOptions.Return;
         SetBooksBasedOnSelectedOptions(TytulName.getText(),GatunkiCB.getValue(),JezykiCB.getValue(),WydawnictwaCB.getValue(),1L,SelectedOption);
     }
-
+    /**
+     * metoda ta odpowida za wylogowanie czyli zmiane sceny na login.fxml
+     *
+     */
     @FXML
     void OnLogoutClick(){
         SceneManager.LoadScene(Scenes.Login);
     }
-
+    /**
+     * metoda ta odpowida za wyswietlanie danych po wcisniecu przycisku search
+     */
     @FXML
     void OnSearchClick(){
         Long id = (SelectedOption.equals(ClientOptions.View) || SelectedOption.equals(ClientOptions.Return))? 1L : Long.MIN_VALUE;
         System.out.println(id == Long.MIN_VALUE);
         SetBooksBasedOnSelectedOptions(TytulName.getText(),GatunkiCB.getValue(),JezykiCB.getValue(),WydawnictwaCB.getValue(),id,SelectedOption);
     }
-
+    /**
+     * metoda ta odpowida za wyswietlanie ksiazek w zaleznosci od zaznaczonej przez uzytkownika opcjji
+     * (oddanie ksiazki , pozyrzenie ksiazki,zobaczenie swoich ksiazek)
+     *   @param Tytul  tytul książki
+     *   @param Gatunek  gatunek książki
+     *   @param Wydawnictwo wydawnictwo książki
+     *   @param UserID id uzytkownika przpisanego do książki
+     *   @param Jezyk  jezyk książki
+     *   @param options opcja wybrana przez uzytkownika
+     *
+     */
     void SetBooksBasedOnSelectedOptions(String Tytul, String Gatunek, String Jezyk, String Wydawnictwo, Long UserID, ClientOptions options){
         MainContainer.getChildren().clear();
         Session s = DataBaseManager.getSessionFactory().openSession();
@@ -114,6 +143,11 @@ public class ClientViewModel {
         }
         s.close();
     }
+    /**
+     * metoda ta odpowida za Dynamiczne przypisanie funckjinalnosci przycisku w zaleznosci od
+     * wybranej ksiazki oraz wybranej funkcji (oddanie ksiazki , pozyrzenie ksiazki,zobaczenie swoich ksiazek)
+     *
+     */
     void DynamicButtonAction(int ksiazkaID,ClientOptions option,Long UserId){
         Session s = DataBaseManager.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -136,7 +170,10 @@ public class ClientViewModel {
             case Return -> OnReturnClick();
         }
     }
-
+    /**
+     * metoda ta odpowida za ustawnienie combobox na podstawie istniejacych gatunkow
+     *
+     */
     void SetGatunkiComboBox(){
         Session s = DataBaseManager.getSessionFactory().openSession();
         s.beginTransaction();
@@ -150,7 +187,10 @@ public class ClientViewModel {
         GatunkiCB.setValue("-");
         s.close();
     }
-
+    /**
+     * metoda ta odpowida za ustawnienie combobox na podstawie istniejacych Jezykow
+     *
+     */
     void SetJezykiComboBox(){
         Session s = DataBaseManager.getSessionFactory().openSession();
         s.beginTransaction();
@@ -164,7 +204,10 @@ public class ClientViewModel {
         JezykiCB.setValue("-");
         s.close();
     }
-
+    /**
+     * metoda ta odpowida za ustawnienie combobox na podstawie istniejacych wydawnictwa
+     *
+     */
     void SetWydawnictwaComboBox(){
         Session s = DataBaseManager.getSessionFactory().openSession();
         s.beginTransaction();
